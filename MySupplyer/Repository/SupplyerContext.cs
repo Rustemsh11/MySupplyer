@@ -7,6 +7,7 @@ namespace MySupplyer.Repository
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<Pipe> Pipes { get; set; }
+        public DbSet<Gost> Gosts { get; set; }
 
         public DbSet<PipeWarehouse> PipeWarehouses { get; set; }
 
