@@ -18,7 +18,7 @@ namespace MySupplyer.Controllers
             gostRepository = new GostRepository();
         }
 
-        [HttpGet("PipeWarehouse/ReguestInfo")]
+        [HttpGet("ReguestInfo")]
         public IActionResult GetRequestInfo()
         {
             RequestInfoDto res = new RequestInfoDto()
