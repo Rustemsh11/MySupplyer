@@ -5,10 +5,17 @@
 namespace MySupplyer.Migrations
 {
     /// <inheritdoc />
-    public partial class addwarehouseTable : Migration
+    public partial class removedWarehouses : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "PipeWarehouses");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "PipeWarehouses",
@@ -34,13 +41,6 @@ namespace MySupplyer.Migrations
                 name: "IX_PipeWarehouses_PipeId",
                 table: "PipeWarehouses",
                 column: "PipeId");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "PipeWarehouses");
         }
     }
 }

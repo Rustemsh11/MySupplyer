@@ -11,8 +11,8 @@ using MySupplyer.Repository;
 namespace MySupplyer.Migrations
 {
     [DbContext(typeof(SupplyerContext))]
-    [Migration("20250417174839_warehousesTables")]
-    partial class warehousesTables
+    [Migration("20250417181015_removedWarehouses")]
+    partial class removedWarehouses
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,16 +88,11 @@ namespace MySupplyer.Migrations
                     b.Property<double>("Thickness")
                         .HasColumnType("float");
 
-                    b.Property<int?>("WarehousePipesId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("GostId");
-
-                    b.HasIndex("WarehousePipesId");
 
                     b.ToTable("Pipes");
                 });
@@ -135,30 +130,11 @@ namespace MySupplyer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PipeId");
+
                     b.HasIndex("WarehouseId");
 
                     b.ToTable("WarehousePipes");
-                });
-
-            modelBuilder.Entity("MySupplyer.Repository.PipeWarehouse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PipeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PipeId");
-
-                    b.ToTable("PipeWarehouses");
                 });
 
             modelBuilder.Entity("MySupplyer.DAL.Pipe", b =>
@@ -175,10 +151,6 @@ namespace MySupplyer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MySupplyer.DAL.WarehousePipes", null)
-                        .WithMany("Pipes")
-                        .HasForeignKey("WarehousePipesId");
-
                     b.Navigation("Category");
 
                     b.Navigation("Gost");
@@ -186,29 +158,21 @@ namespace MySupplyer.Migrations
 
             modelBuilder.Entity("MySupplyer.DAL.WarehousePipes", b =>
                 {
-                    b.HasOne("MySupplyer.DAL.Warehouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Warehouse");
-                });
-
-            modelBuilder.Entity("MySupplyer.Repository.PipeWarehouse", b =>
-                {
                     b.HasOne("MySupplyer.DAL.Pipe", "Pipe")
                         .WithMany()
                         .HasForeignKey("PipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Pipe");
-                });
+                    b.HasOne("MySupplyer.DAL.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("MySupplyer.DAL.WarehousePipes", b =>
-                {
-                    b.Navigation("Pipes");
+                    b.Navigation("Pipe");
+
+                    b.Navigation("Warehouse");
                 });
 #pragma warning restore 612, 618
         }

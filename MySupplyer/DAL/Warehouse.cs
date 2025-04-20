@@ -1,4 +1,6 @@
-﻿namespace MySupplyer.DAL
+﻿using System.IO.Pipes;
+
+namespace MySupplyer.DAL
 {
     public class Warehouse
     {

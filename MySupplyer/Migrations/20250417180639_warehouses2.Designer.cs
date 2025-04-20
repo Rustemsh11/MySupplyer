@@ -11,8 +11,8 @@ using MySupplyer.Repository;
 namespace MySupplyer.Migrations
 {
     [DbContext(typeof(SupplyerContext))]
-    [Migration("20250409180325_addwarehouseTable")]
-    partial class addwarehouseTable
+    [Migration("20250417180639_warehouses2")]
+    partial class warehouses2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,23 @@ namespace MySupplyer.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("MySupplyer.DAL.Gost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gosts");
+                });
+
             modelBuilder.Entity("MySupplyer.DAL.Pipe", b =>
                 {
                     b.Property<int>("Id")
@@ -52,11 +69,17 @@ namespace MySupplyer.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<double>("Diametr")
+                        .HasColumnType("float");
+
+                    b.Property<int>("GostId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("PN")
+                    b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.Property<double>("SDR")
@@ -65,14 +88,53 @@ namespace MySupplyer.Migrations
                     b.Property<double>("Thickness")
                         .HasColumnType("float");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("GostId");
+
                     b.ToTable("Pipes");
+                });
+
+            modelBuilder.Entity("MySupplyer.DAL.Warehouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Warehouses");
+                });
+
+            modelBuilder.Entity("MySupplyer.DAL.WarehousePipes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PipeId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("WarehousePipes");
                 });
 
             modelBuilder.Entity("MySupplyer.Repository.PipeWarehouse", b =>
@@ -104,7 +166,34 @@ namespace MySupplyer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MySupplyer.DAL.Gost", "Gost")
+                        .WithMany()
+                        .HasForeignKey("GostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("Gost");
+                });
+
+            modelBuilder.Entity("MySupplyer.DAL.WarehousePipes", b =>
+                {
+                    b.HasOne("MySupplyer.DAL.Pipe", "Pipe")
+                        .WithMany()
+                        .HasForeignKey("PipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MySupplyer.DAL.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pipe");
+
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("MySupplyer.Repository.PipeWarehouse", b =>

@@ -5,16 +5,30 @@
 namespace MySupplyer.Migrations
 {
     /// <inheritdoc />
-    public partial class warehousesTables : Migration
+    public partial class warehouses2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "WarehousePipesId",
-                table: "Pipes",
-                type: "int",
-                nullable: true);
+            migrationBuilder.CreateTable(
+                name: "PipeWarehouses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PipeId = table.Column<int>(type: "int", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PipeWarehouses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PipeWarehouses_Pipes_PipeId",
+                        column: x => x.PipeId,
+                        principalTable: "Pipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Warehouses",
@@ -42,6 +56,12 @@ namespace MySupplyer.Migrations
                 {
                     table.PrimaryKey("PK_WarehousePipes", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_WarehousePipes_Pipes_PipeId",
+                        column: x => x.PipeId,
+                        principalTable: "Pipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_WarehousePipes_Warehouses_WarehouseId",
                         column: x => x.WarehouseId,
                         principalTable: "Warehouses",
@@ -50,43 +70,32 @@ namespace MySupplyer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pipes_WarehousePipesId",
-                table: "Pipes",
-                column: "WarehousePipesId");
+                name: "IX_PipeWarehouses_PipeId",
+                table: "PipeWarehouses",
+                column: "PipeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarehousePipes_PipeId",
+                table: "WarehousePipes",
+                column: "PipeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WarehousePipes_WarehouseId",
                 table: "WarehousePipes",
                 column: "WarehouseId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Pipes_WarehousePipes_WarehousePipesId",
-                table: "Pipes",
-                column: "WarehousePipesId",
-                principalTable: "WarehousePipes",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Pipes_WarehousePipes_WarehousePipesId",
-                table: "Pipes");
+            migrationBuilder.DropTable(
+                name: "PipeWarehouses");
 
             migrationBuilder.DropTable(
                 name: "WarehousePipes");
 
             migrationBuilder.DropTable(
                 name: "Warehouses");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Pipes_WarehousePipesId",
-                table: "Pipes");
-
-            migrationBuilder.DropColumn(
-                name: "WarehousePipesId",
-                table: "Pipes");
         }
     }
 }

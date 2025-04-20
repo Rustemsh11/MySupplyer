@@ -11,9 +11,6 @@ namespace MySupplyer.Repository
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehousePipes> WarehousePipes { get; set; }
 
-
-        public DbSet<PipeWarehouse> PipeWarehouses { get; set; }
-
         public SupplyerContext()
         {
             Database.EnsureCreated();
